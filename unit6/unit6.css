@@ -5,7 +5,8 @@
 body{
 font-family: Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 background-color:antiquewhite;
-color:black;
+color:red;
+font-style: bold;
 }
 #borderimg{
   width:60%;
