@@ -77,7 +77,9 @@ footer { background-color: #FFFFCC;
   font-size: 10px;
 
   }
-
+  img{
+    display:none;
+  }
 
   
 }
