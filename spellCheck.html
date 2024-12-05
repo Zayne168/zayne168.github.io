@@ -114,26 +114,31 @@ ul li::before {
         //print 10 closest words
         function findClosestWords() {
             const myWord = document.getElementById('myWord').value;  // Renamed input variable
-            const dictionary = ["apple", "banana", "grape", "orange", "pear", "kiwi", "mango", "peach", "apricot", "cherry", "plum", "melon"];
-            const distances = [];
+		fetch('dictionary.txt')  //fetch dictionary file
+			.then(response => response.text())  //I hope I never have to learn how to fetch in JS like this again
+			.then(data => {
+			// word, split on new line
+			const dictionary = data.split("\n");
+			const distances = [];
 
-            //Calculate the penalty score between myWord and each word in the dictionary
-            for (let i = 0; i < dictionary.length; i++) {
-                const distance = computeAlignmentScore(myWord, dictionary[i]);
-                distances.push({ word: dictionary[i], distance: distance });
-            }
+				//Calculate the penalty score between myWord and each word in the dictionary
+				for (let i = 0; i < dictionary.length; i++) {
+					const distance = computeAlignmentScore(myWord, dictionary[i]);
+					distances.push({ word: dictionary[i], distance: distance });
+				}
 
-            //sort by penalty score
-            distances.sort((a, b) => a.distance - b.distance);
-			
-            //display 10 closest words
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '<h3>Closest Words:</h3>';
-				const limit = Math.min(distances.length, 10);
-			//this is my first time using a for loop in JS, pretty cool and just like C++ actually
-            for (let i = 0; i < limit; i++) {
-                resultDiv.innerHTML += `<p>${distances[i].word} (Penalty: ${distances[i].distance})</p>`;
-            }
+				//sort by penalty score
+				distances.sort((a, b) => a.distance - b.distance);
+				
+				//display 10 closest words
+				const resultDiv = document.getElementById('result');
+				resultDiv.innerHTML = '<h3>Closest Words:</h3>';
+					const limit = Math.min(distances.length, 10);
+				//this is my first time using a for loop in JS, pretty cool and just like C++ actually
+				for (let i = 0; i < limit; i++) {
+					resultDiv.innerHTML += `<p>${distances[i].word} (Penalty: ${distances[i].distance})</p>`;
+				}
+			})//this bracket starts at data =>
         }
     </script>
 </head>
