@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spell Checker</title>
+	HR{
+  border-style: inset;
+  border-radius: 50px;}
+}
+h1{
+  border-style: solid;
+  border-color: black orange orange black;
+  border-radius: 50px;}
+ul{
+  list-style: none;
+}
+
+ul li::before {
+  content: "\2022";
+  color: orange;
+  font-weight: bold;
+  display: inline-block; 
+  width: 1em;
+  margin-left: -1em;
+
+}
+
+   body {background-color: #D3D3D3;
+   font-family: Papyrus;
+   }
+
+  a:link{
+    color: black;
+    text-decoration: none;
+
+
+
+  }
+  a:hover{
+      color: orange;
+      border-style: inset;
+
+
+
+   }
+  a:active {
+  color: red;
+}
     <script>
         // Define vowels for easy checking
         const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
