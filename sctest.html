@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequence Alignment with DP (Top-right Optimal)</title>
+    <script>
+        // Define vowels for easy checking
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+
+        // Function to check if a character is a vowel
+        function isVowel(char) {
+            return vowels.has(char.toLowerCase());
+        }
+
+        // Function to calculate the penalty for aligning two characters
+        function calcPen(c1, c2) {
+            // If both are the same (exact match)
+            if (c1 === c2) {
+                return 0;  // No penalty for exact match
+            }
+
+            // If one is a gap (represented by '-')
+            if (c1 === '-' || c2 === '-') {
+                return 2;  // Gap penalty
+            }
+
+            // If both are consonants or both are vowels (consonant/consonant or vowel/vowel mismatch)
+            if ((isVowel(c1) && isVowel(c2)) || (!isVowel(c1) && !isVowel(c2))) {
+                return 1;  // Mismatch penalty for consonant/consonant or vowel/vowel
+            }
+
+            // If one is a vowel and the other is a consonant (vowel/consonant mismatch)
+            return 3;  // Mismatch penalty for vowel/consonant
+        }
+
+        // Function to compute the optimal alignment score using dynamic programming
+        function computeAlignmentScore(str1, str2) {
+            const m = str1.length;
+            const n = str2.length;
+
+            // Initialize the DP matrix (m+1 x n+1) and call it 'opt'
+            const opt = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+
+            // Initialize the first row and first column with gap penalties
+            for (let i = 1; i <= m; i++) {
+                opt[i][n] = opt[i - 1][n] + 2; // Gap penalty for str1
+            }
+            for (let j = 1; j <= n; j++) {
+                opt[0][j] = opt[0][j - 1] + 2; // Gap penalty for str2
+            }
+
+            // Fill the DP table (opt matrix)
+            for (let i = 1; i <= m; i++) {
+                for (let j = 1; j <= n; j++) {
+                    const matchPenalty = calcPen(str1[i - 1], str2[j - 1]);
+                    opt[i][j] = Math.min(
+                        opt[i - 1][j - 1] + matchPenalty, // Substitution or match
+                        opt[i - 1][j] + 2,                 // Deletion (gap in str2)
+                        opt[i][j - 1] + 2                  // Insertion (gap in str1)
+                    );
+                }
+            }
+
+            return opt[m][n];  // The optimal alignment score is in the top-right corner
+        }
+
+        // Function to handle form submission and compute closest words
+        function findClosestWords() {
+            const myWord = document.getElementById('myWord').value;  // Renamed input variable
+            const dictionary = ["apple", "banana", "grape", "orange", "pear", "kiwi", "mango", "peach", "apricot", "cherry", "plum", "melon"];
+            const distances = [];
+
+            // Calculate the penalty score between myWord and each word in the dictionary
+            for (let i = 0; i < dictionary.length; i++) {
+                const distance = computeAlignmentScore(myWord, dictionary[i]);
+                distances.push({ word: dictionary[i], distance: distance });
+            }
+
+            // Sort the words by the smallest penalty score
+            distances.sort((a, b) => a.distance - b.distance);
+
+            // Show the top 10 closest words
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>Closest Words:</h3>';
+            const limit = Math.min(distances.length, 10);
+            for (let i = 0; i < limit; i++) {
+                resultDiv.innerHTML += `<p>${distances[i].word} (Penalty: ${distances[i].distance})</p>`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Word Similarity Finder with DP Alignment (Top-right Optimal)</h1>
+    <form onsubmit="event.preventDefault(); findClosestWords();">
+        <label for="myWord">Enter a word:</label>  <!-- Renamed input ID -->
+        <input type="text" id="myWord" required>  <!-- Renamed input ID -->
+        <button type="submit">Find Closest Words</button>
+    </form>
+
+    <div id="result"></div>
+</body>
+</html>
