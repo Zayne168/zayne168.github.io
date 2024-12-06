@@ -118,7 +118,7 @@ ul li::before {
 			.then(response => response.text())  //I hope I never have to learn how to fetch in JS like this again
 			.then(data => {
 			// word, split on new line
-			const dictionary = data.split("\n");
+			const dictionary = data.split("\n").map(word => word.trim());
 			const distances = [];
 
 				//Calculate the penalty score between myWord and each word in the dictionary
